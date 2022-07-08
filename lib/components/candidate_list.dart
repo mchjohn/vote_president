@@ -1,9 +1,16 @@
 import 'package:flutter/material.dart';
+
+import 'package:vote_president_app/components/modal_details.dart';
 import 'package:vote_president_app/repositories/candidate_repository.dart';
 
-class CandidateList extends StatelessWidget {
+class CandidateList extends StatefulWidget {
   const CandidateList({Key? key}) : super(key: key);
 
+  @override
+  State<CandidateList> createState() => _CandidateListState();
+}
+
+class _CandidateListState extends State<CandidateList> {
   @override
   Widget build(BuildContext context) {
     final table = CandidateRepository.table;
@@ -12,8 +19,11 @@ class CandidateList extends StatelessWidget {
       child: ListView.separated(
         itemBuilder: (BuildContext context, int candidate) {
           return ListTile(
-            leading: CircleAvatar(
-              backgroundImage: NetworkImage(table[candidate].avatar),
+            leading: TextButton(
+              child: CircleAvatar(
+                backgroundImage: NetworkImage(table[candidate].avatar),
+              ),
+              onPressed: _onButtonPressed,
             ),
             title: Padding(
               padding: const EdgeInsets.only(bottom: 8),
@@ -79,6 +89,25 @@ class CandidateList extends StatelessWidget {
         itemCount: table.length,
         shrinkWrap: true,
       ),
+    );
+  }
+
+  void _onButtonPressed() {
+    showModalBottomSheet(
+      isScrollControlled: true,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.only(
+          topLeft: Radius.circular(15.0),
+          topRight: Radius.circular(15.0),
+        ),
+      ),
+      context: context,
+      builder: (context) {
+        return const FractionallySizedBox(
+          heightFactor: 0.8,
+          child: ModalDetails(),
+        );
+      },
     );
   }
 }
